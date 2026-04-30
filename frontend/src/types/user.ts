@@ -7,7 +7,6 @@ export interface User {
   fullName: string;
   role: UserRole;
   isActive: boolean;
-  profileImageUrl?: string;
   lastLoginAt?: string;
   createdAt: string;
   updatedAt: string;
@@ -27,7 +26,6 @@ export interface UpdateUserPayload {
   role?: UserRole;
   password?: string;
   isActive?: boolean;
-  profileImageUrl?: string;
 }
 
 export interface UsersQueryParams {
