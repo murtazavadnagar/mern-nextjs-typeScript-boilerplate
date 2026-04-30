@@ -27,13 +27,11 @@ export const UserDetailsCard = ({ user }: Props) => {
         <Stack direction="row" spacing={1}>
           <Chip
             label={user.role}
-            color={
-              user.role === 'ADMIN' ? 'secondary' : user.role === 'GUEST' ? 'warning' : 'primary'
-            }
+            color={user.role === 'ADMIN' ? 'secondary' : user.role === 'GUEST' ? 'info' : 'primary'}
           />
           <Chip
             label={user.isActive ? 'Active' : 'Inactive'}
-            color={user.isActive ? 'success' : 'default'}
+            color={user.isActive ? 'success' : 'warning'}
           />
         </Stack>
       </Stack>
