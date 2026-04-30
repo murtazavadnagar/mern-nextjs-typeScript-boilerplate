@@ -1,0 +1,12 @@
+process.env.NODE_ENV = 'test';
+process.env.JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET ?? 'test_access_secret_123456';
+process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET ?? 'test_refresh_secret_123456';
+process.env.JWT_ACCESS_EXPIRES = '15m';
+process.env.JWT_REFRESH_EXPIRES = '7d';
+process.env.JWT_REFRESH_COOKIE_NAME = 'ums_refresh_token';
+process.env.CLIENT_URL = 'http://localhost:3000';
+process.env.RATE_LIMIT_WINDOW_MS = '900000';
+process.env.RATE_LIMIT_MAX = '1000';
+process.env.ENABLE_SWAGGER = 'false';
+process.env.CSRF_ENABLED = 'false';
+process.env.MONGO_URI = process.env.MONGO_URI ?? 'mongodb://localhost:27017/test-db';

@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:8
+    container_name: ums-mongodb
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: ums-backend
+    env_file:
+      - backend/.env
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: ums-frontend
+    env_file:
+      - frontend/.env.local
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
