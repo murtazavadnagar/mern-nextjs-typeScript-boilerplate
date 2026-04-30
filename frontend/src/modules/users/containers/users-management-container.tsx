@@ -8,7 +8,11 @@ import { toast } from 'sonner';
 import { ComponentErrorBoundary } from '@/components/common/component-error-boundary';
 import { LoadingSkeleton } from '@/components/common/loading-skeleton';
 import { User } from '@/types/user';
-import { useCreateUserMutation, useDeleteUserMutation, useUpdateUserMutation } from '../hooks/useUserMutations';
+import {
+  useCreateUserMutation,
+  useDeleteUserMutation,
+  useUpdateUserMutation,
+} from '../hooks/useUserMutations';
 import { useUsersFiltersReducer } from '../hooks/useUsersFiltersReducer';
 import { useUsersQuery } from '../hooks/useUsersQuery';
 import { UserFormDialog } from '../components/user-form-dialog';
