@@ -10,7 +10,6 @@ export interface IUser extends Document {
   isActive: boolean;
   isDeleted: boolean;
   deletedAt?: Date;
-  profileImageUrl?: string;
   createdBy?: Types.ObjectId;
   updatedBy?: Types.ObjectId;
   lastLoginAt?: Date;
@@ -64,10 +63,6 @@ const userSchema = new Schema<IUser>(
     },
     deletedAt: {
       type: Date,
-      default: null,
-    },
-    profileImageUrl: {
-      type: String,
       default: null,
     },
     createdBy: {

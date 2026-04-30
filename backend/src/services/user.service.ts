@@ -22,7 +22,6 @@ const mapUser = (user: IUser): Record<string, unknown> => {
     fullName: user.fullName,
     role: user.role,
     isActive: user.isActive,
-    profileImageUrl: user.profileImageUrl,
     lastLoginAt: user.lastLoginAt,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
@@ -38,7 +37,10 @@ export class UserService {
     this.auditLogRepository = new AuditLogRepository();
   }
 
-  async createUser(dto: CreateUserDto, context: RequestAuditContext): Promise<Record<string, unknown>> {
+  async createUser(
+    dto: CreateUserDto,
+    context: RequestAuditContext,
+  ): Promise<Record<string, unknown>> {
     const existingByUsername = await this.userRepository.findByUsername(dto.username);
     if (existingByUsername) {
       throw new ApiError(StatusCodes.CONFLICT, 'Username already exists');
@@ -71,7 +73,9 @@ export class UserService {
     return mapUser(createdUser);
   }
 
-  async listUsers(query: UserListQueryDto): Promise<{ users: Record<string, unknown>[]; meta: PaginationMeta }> {
+  async listUsers(
+    query: UserListQueryDto,
+  ): Promise<{ users: Record<string, unknown>[]; meta: PaginationMeta }> {
     const { users, total } = await this.userRepository.list(query);
     const page = query.page ?? 1;
     const limit = query.limit ?? 10;

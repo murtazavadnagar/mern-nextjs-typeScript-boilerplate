@@ -14,7 +14,6 @@ export interface UpdateUserDto {
   fullName?: string;
   password?: string;
   isActive?: boolean;
-  profileImageUrl?: string;
 }
 
 export interface UserListQueryDto {
