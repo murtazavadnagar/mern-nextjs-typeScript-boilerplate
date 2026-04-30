@@ -15,6 +15,7 @@ import {
 } from '../hooks/useUserMutations';
 import { useUsersFiltersReducer } from '../hooks/useUsersFiltersReducer';
 import { useUsersQuery } from '../hooks/useUsersQuery';
+import { UserDeleteDialog } from '../components/user-delete-dialog';
 import { UserFormDialog } from '../components/user-form-dialog';
 import { UsersTable } from '../components/users-table';
 import { UsersToolbar } from '../components/users-toolbar';
@@ -30,6 +31,8 @@ export const UsersManagementContainer = () => {
   const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [deleteTargetUser, setDeleteTargetUser] = useState<User | undefined>(undefined);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const users = usersQuery.data?.users ?? [];
   const total = usersQuery.data?.meta?.total ?? 0;
@@ -53,6 +56,16 @@ export const UsersManagementContainer = () => {
 
   const closeDialog = (): void => {
     setIsDialogOpen(false);
+  };
+
+  const openDeleteDialog = (user: User): void => {
+    setDeleteTargetUser(user);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = (): void => {
+    setIsDeleteDialogOpen(false);
+    setDeleteTargetUser(undefined);
   };
 
   const handleCreate = async (values: {
@@ -105,16 +118,15 @@ export const UsersManagementContainer = () => {
     }
   };
 
-  const handleDelete = async (user: User): Promise<void> => {
-    const confirmed = window.confirm(`Delete user ${user.fullName}? This is a soft delete.`);
-
-    if (!confirmed) {
+  const handleDelete = async (): Promise<void> => {
+    if (!deleteTargetUser) {
       return;
     }
 
     try {
-      await deleteMutation.mutateAsync(user.id);
+      await deleteMutation.mutateAsync(deleteTargetUser.id);
       toast.success('User deleted');
+      closeDeleteDialog();
     } catch {
       toast.error('Failed to delete user');
     }
@@ -160,7 +172,7 @@ export const UsersManagementContainer = () => {
             onLimitChange={(nextLimit) => dispatch({ type: 'SET_LIMIT', payload: nextLimit })}
             onEdit={openEditDialog}
             onDelete={(user) => {
-              void handleDelete(user);
+              openDeleteDialog(user);
             }}
           />
         </ComponentErrorBoundary>
@@ -174,6 +186,14 @@ export const UsersManagementContainer = () => {
         onClose={closeDialog}
         onCreate={handleCreate}
         onUpdate={handleUpdate}
+      />
+
+      <UserDeleteDialog
+        open={isDeleteDialogOpen}
+        user={deleteTargetUser}
+        isSubmitting={deleteMutation.isPending}
+        onClose={closeDeleteDialog}
+        onConfirm={handleDelete}
       />
     </Stack>
   );
