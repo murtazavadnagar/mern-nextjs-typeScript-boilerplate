@@ -91,6 +91,10 @@ export const UserFormDialog = ({
   });
 
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+
     if (mode === 'edit' && initialUser) {
       updateForm.reset({
         email: initialUser.email,
@@ -110,7 +114,7 @@ export const UserFormDialog = ({
         password: '',
       });
     }
-  }, [createForm, initialUser, mode, updateForm]);
+  }, [createForm, initialUser, mode, open, updateForm]);
 
   const createSubmit = createForm.handleSubmit(async (values) => {
     await onCreate(values);

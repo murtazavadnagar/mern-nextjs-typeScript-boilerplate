@@ -1,16 +1,24 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/utils/constants';
 import { usersService } from '@/services/users.service';
 import { User } from '@/types/user';
 
+type UsersListCache = {
+  users: User[];
+  meta?: { page: number; limit: number; total: number; totalPages: number };
+};
+
+const isUsersListCache = (value: unknown): value is UsersListCache => {
+  return typeof value === 'object' && value !== null && Array.isArray((value as UsersListCache).users);
+};
+
 const updateUserInCache = (
-  previousData:
-    | { users: User[]; meta?: { page: number; limit: number; total: number; totalPages: number } }
-    | undefined,
+  previousData: UsersListCache | undefined,
   updatedUser: User,
 ):
-  | { users: User[]; meta?: { page: number; limit: number; total: number; totalPages: number } }
+  | UsersListCache
   | undefined => {
   if (!previousData) {
     return previousData;
@@ -46,15 +54,10 @@ export const useUpdateUserMutation = () => {
     }) => usersService.update(id, payload),
     onMutate: async ({ id, payload }) => {
       await queryClient.cancelQueries({ queryKey: ['users'] });
-      const previous = queryClient.getQueriesData<{
-        users: User[];
-        meta?: { page: number; limit: number; total: number; totalPages: number };
-      }>({
-        queryKey: ['users'],
-      });
+      const previous = queryClient.getQueriesData<unknown>({ queryKey: ['users'] });
 
       previous.forEach(([queryKey, snapshot]) => {
-        if (!snapshot) {
+        if (!isUsersListCache(snapshot)) {
           return;
         }
 
@@ -69,19 +72,28 @@ export const useUpdateUserMutation = () => {
         );
       });
 
-      return { previous };
+      const previousUser = queryClient.getQueryData<User>(QUERY_KEYS.user(id));
+      if (previousUser) {
+        queryClient.setQueryData<User>(QUERY_KEYS.user(id), { ...previousUser, ...payload });
+      }
+
+      return { previous, previousUser };
     },
     onError: (_error, _variables, context) => {
-      if (!context?.previous) {
+      if (!context) {
         return;
       }
 
       context.previous.forEach(([queryKey, data]) => {
         queryClient.setQueryData(queryKey, data);
       });
+
+      if (context.previousUser) {
+        queryClient.setQueryData(QUERY_KEYS.user(context.previousUser.id), context.previousUser);
+      }
     },
     onSuccess: async (user) => {
-      queryClient.setQueryData(['users', user.id], user);
+      queryClient.setQueryData(QUERY_KEYS.user(user.id), user);
       await queryClient.invalidateQueries({ queryKey: ['users'] });
     },
   });
@@ -94,15 +106,10 @@ export const useDeleteUserMutation = () => {
     mutationFn: usersService.remove,
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey: ['users'] });
-      const previous = queryClient.getQueriesData<{
-        users: User[];
-        meta?: { page: number; limit: number; total: number; totalPages: number };
-      }>({
-        queryKey: ['users'],
-      });
+      const previous = queryClient.getQueriesData<unknown>({ queryKey: ['users'] });
 
       previous.forEach(([queryKey, snapshot]) => {
-        if (!snapshot) {
+        if (!isUsersListCache(snapshot)) {
           return;
         }
 

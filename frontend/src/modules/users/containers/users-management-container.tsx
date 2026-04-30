@@ -56,6 +56,7 @@ export const UsersManagementContainer = () => {
 
   const closeDialog = (): void => {
     setIsDialogOpen(false);
+    setSelectedUser(undefined);
   };
 
   const openDeleteDialog = (user: User): void => {
