@@ -15,8 +15,8 @@ export const useLoginForm = () => {
   return useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: '',
-      password: '',
+      username: 'john_doe',
+      password: 'John@1234',
     },
     mode: 'onBlur',
   });
