@@ -10,3 +10,4 @@ process.env.RATE_LIMIT_MAX = '1000';
 process.env.ENABLE_SWAGGER = 'false';
 process.env.CSRF_ENABLED = 'false';
 process.env.MONGO_URI = process.env.MONGO_URI ?? 'mongodb://localhost:27017/test-db';
+process.env.HOST = 'http://localhost:5000';

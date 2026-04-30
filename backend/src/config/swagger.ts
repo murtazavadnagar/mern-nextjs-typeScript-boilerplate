@@ -1,5 +1,6 @@
 import path from 'path';
 import swaggerJSDoc from 'swagger-jsdoc';
+import { env } from './env';
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -11,7 +12,7 @@ const options: swaggerJSDoc.Options = {
     },
     servers: [
       {
-        url: 'http://localhost:5000/api/v1',
+        url: `${env.HOST}/api/v1`,
       },
     ],
     components: {
@@ -24,7 +25,10 @@ const options: swaggerJSDoc.Options = {
       },
     },
   },
-  apis: [path.resolve(__dirname, '../routes/v1/*.ts')],
+  apis: [
+    path.join(__dirname, '../routes/v1/*.ts'), // local
+    path.join(__dirname, '../routes/v1/*.js'), // production
+  ],
 };
 
 export const swaggerSpec = swaggerJSDoc(options);

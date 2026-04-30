@@ -15,6 +15,7 @@ process.env.RATE_LIMIT_WINDOW_MS = '900000';
 process.env.RATE_LIMIT_MAX = '1000';
 process.env.ENABLE_SWAGGER = 'false';
 process.env.CSRF_ENABLED = 'false';
+process.env.HOST = 'http://localhost:5000';
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();

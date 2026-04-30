@@ -32,6 +32,7 @@ const envSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(200),
   ENABLE_SWAGGER: booleanFromEnv(true),
   CSRF_ENABLED: booleanFromEnv(false),
+  HOST: z.string().url().default('http://localhost:5000'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
