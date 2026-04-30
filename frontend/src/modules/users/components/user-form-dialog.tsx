@@ -120,12 +120,12 @@ export const UserFormDialog = ({
     await onUpdate(values);
   });
 
-  if (mode === 'create') {
-    return (
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-        <DialogTitle>Create User</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} pt={1}>
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>{mode === 'create' ? 'Create User' : 'Update User'}</DialogTitle>
+      <DialogContent>
+        <Stack spacing={2} pt={1}>
+          {mode === 'create' && (
             <Controller
               name="username"
               control={createForm.control}
@@ -138,81 +138,8 @@ export const UserFormDialog = ({
                 />
               )}
             />
+          )}
 
-            <Controller
-              name="fullName"
-              control={createForm.control}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Full Name"
-                  error={Boolean(fieldState.error)}
-                  helperText={fieldState.error?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="email"
-              control={createForm.control}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Email"
-                  error={Boolean(fieldState.error)}
-                  helperText={fieldState.error?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name="role"
-              control={createForm.control}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  select
-                  label="Role"
-                  error={Boolean(fieldState.error)}
-                  helperText={fieldState.error?.message}
-                >
-                  <MenuItem value="ADMIN">Admin</MenuItem>
-                  <MenuItem value="USER">User</MenuItem>
-                  <MenuItem value="GUEST">Guest</MenuItem>
-                </TextField>
-              )}
-            />
-
-            <Controller
-              name="password"
-              control={createForm.control}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Password"
-                  type="password"
-                  error={Boolean(fieldState.error)}
-                  helperText={fieldState.error?.message}
-                />
-              )}
-            />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={() => void createSubmit()} variant="contained" disabled={isSubmitting}>
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
-
-  return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Update User</DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} pt={1}>
           <Controller
             name="fullName"
             control={updateForm.control}
@@ -257,21 +184,23 @@ export const UserFormDialog = ({
             )}
           />
 
-          <Controller
-            name="isActive"
-            control={updateForm.control}
-            render={({ field }) => (
-              <TextField
-                select
-                label="Status"
-                value={String(field.value)}
-                onChange={(event) => field.onChange(event.target.value === 'true')}
-              >
-                <MenuItem value="true">Active</MenuItem>
-                <MenuItem value="false">Inactive</MenuItem>
-              </TextField>
-            )}
-          />
+          {mode === 'edit' && (
+            <Controller
+              name="isActive"
+              control={updateForm.control}
+              render={({ field }) => (
+                <TextField
+                  select
+                  label="Status"
+                  value={String(field.value)}
+                  onChange={(event) => field.onChange(event.target.value === 'true')}
+                >
+                  <MenuItem value="true">Active</MenuItem>
+                  <MenuItem value="false">Inactive</MenuItem>
+                </TextField>
+              )}
+            />
+          )}
 
           <Controller
             name="password"
@@ -279,7 +208,7 @@ export const UserFormDialog = ({
             render={({ field, fieldState }) => (
               <TextField
                 {...field}
-                label="New Password (optional)"
+                label={mode === 'create' ? 'Password' : 'New Password (optional)'}
                 type="password"
                 error={Boolean(fieldState.error)}
                 helperText={fieldState.error?.message}
@@ -290,8 +219,12 @@ export const UserFormDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => void updateSubmit()} variant="contained" disabled={isSubmitting}>
-          Save
+        <Button
+          onClick={() => (mode === 'create' ? createSubmit() : updateSubmit())}
+          variant="contained"
+          disabled={isSubmitting}
+        >
+          {mode === 'create' ? 'Create' : 'Save'}
         </Button>
       </DialogActions>
     </Dialog>
