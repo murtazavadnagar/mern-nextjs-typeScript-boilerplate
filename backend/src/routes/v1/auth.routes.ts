@@ -29,6 +29,26 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     accessToken:
+ *                       type: string
+ *                     refreshToken:
+ *                       type: string
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Invalid credentials
  */
 router.post('/login', authRateLimiter, validate(loginSchema), asyncHandler(login));
 router.post('/refresh', authRateLimiter, validate(refreshTokenSchema), asyncHandler(refresh));

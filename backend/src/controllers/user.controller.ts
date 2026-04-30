@@ -3,7 +3,6 @@ import { StatusCodes } from 'http-status-codes';
 import { UserService } from '../services/user.service';
 import { UserListQueryDto } from '../dto/user.dto';
 import { ApiError } from '../utils/ApiError';
-import { env } from '../config/env';
 import { UserRole } from '../types/user';
 
 const userService = new UserService();
@@ -16,8 +15,8 @@ const getAuditContext = (req: Request) => ({
 });
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
-  console.log('Create user: ', req.authUser);
-  console.log('Create user: ', req.body);
+  // console.log('Create user: ', req.authUser);
+  // console.log('Create user: ', req.body);
   if (req.authUser?.role === UserRole.USER && req.body.role === UserRole.ADMIN) {
     throw new ApiError(StatusCodes.FORBIDDEN, 'Forbidden access');
   }

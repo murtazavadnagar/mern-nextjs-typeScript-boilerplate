@@ -7,7 +7,6 @@ import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import morgan from 'morgan';
-import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import xssClean from 'xss-clean';
 import { env } from './config/env';
