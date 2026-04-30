@@ -1,11 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  DeleteOutline,
-  EditOutlined,
-  VisibilityOutlined,
-} from '@mui/icons-material';
+import { DeleteOutline, EditOutlined, VisibilityOutlined } from '@mui/icons-material';
 import {
   Chip,
   IconButton,
@@ -79,14 +75,20 @@ export const UsersTable = ({
                 <TableCell>
                   <Chip
                     label={user.role}
-                    color={user.role === 'ADMIN' ? 'secondary' : 'primary'}
+                    color={
+                      user.role === 'ADMIN'
+                        ? 'secondary'
+                        : user.role === 'GUEST'
+                          ? 'info'
+                          : 'primary'
+                    }
                     size="small"
                   />
                 </TableCell>
                 <TableCell>
                   <Chip
                     label={user.isActive ? 'Active' : 'Inactive'}
-                    color={user.isActive ? 'success' : 'default'}
+                    color={user.isActive ? 'success' : 'warning'}
                     size="small"
                   />
                 </TableCell>
@@ -103,7 +105,11 @@ export const UsersTable = ({
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Edit">
-                      <IconButton onClick={() => onEdit(user)} size="small" aria-label={`edit-${user.id}`}>
+                      <IconButton
+                        onClick={() => onEdit(user)}
+                        size="small"
+                        aria-label={`edit-${user.id}`}
+                      >
                         <EditOutlined fontSize="small" />
                       </IconButton>
                     </Tooltip>
